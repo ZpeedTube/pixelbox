@@ -3,7 +3,17 @@ extends Node
 onready var pixel_types = [
 	null,
 	load("res://Types/sand.gd"),
-	load("res://Types/water.gd")
+	load("res://Types/water.gd"),
+	load("res://Types/dirt.gd"),
+	load("res://Types/wood.gd")
+]
+
+export var pixel_name = [
+	"empty",
+	"sand",
+	"water",
+	"dirt",
+	"wood"
 ]
 
 export var default_type:int = 0
@@ -44,7 +54,8 @@ func new_pixel(global_pos: Vector2, type: int):
 		"pos": {"x": int(pos.x), "y": int(pos.y)},
 		"type": type,
 		"color": type,
-		"velocity": -1
+		"velocity": -1,
+		"life": null
 	}
 
 	var pos1d = world_width * int(pos.y) + int(pos.x)
