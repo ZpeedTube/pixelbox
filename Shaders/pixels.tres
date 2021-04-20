@@ -1,0 +1,25 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=2]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type canvas_item;
+
+uniform float scale = 1;
+uniform float red = 1;
+uniform float green = 1;
+uniform float blue = 1;
+uniform float alpha = 1;
+
+void fragment() {
+	COLOR = texture(TEXTURE, UV) * scale;
+	COLOR = vec4( red, green, blue, alpha );
+//	COLOR = vec4(0.4, 0.6, 0.9, 1.0);
+//	COLOR.g = 1.0;
+}"
+
+[resource]
+shader = SubResource( 1 )
+shader_param/scale = 1.0
+shader_param/red = 1.0
+shader_param/green = 1.0
+shader_param/blue = 1.0
+shader_param/alpha = 1.0
