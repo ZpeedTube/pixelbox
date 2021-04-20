@@ -18,7 +18,8 @@ export var color_enum = [
 	Color(0.0, 0.0, 0.0, 0.0),
 	Color(0.5, 0.8, 0.1, 1.0),
 	Color(0.2, 0.2, 0.9, 1.0),
-	Color(1.0, 0.2, 0.2, 1.0)
+	Color(0.21, 0.04, 0.04, 1.0),
+	Color(0.38, 0.45, 0.39, 1.0)
 ]
 
 var mouse_pressed = false
@@ -32,11 +33,11 @@ func _ready():
 func _input(event):
 	if event.is_action("click"):
 		mouse_pressed = !mouse_pressed
-	if event.is_action("scroll_up"):
+	if event.is_action_pressed("scroll_up"):
 		spawn_type -= 1
 		if spawn_type < 0:
 			spawn_type = pixel_manager.pixel_types.size() - 1
-	elif event.is_action("scroll_down"):
+	elif event.is_action_pressed("scroll_down"):
 		spawn_type += 1
 		if spawn_type >= pixel_manager.pixel_types.size():
 			spawn_type = 0
@@ -57,6 +58,7 @@ func _process(delta):
 	if simulation_frame % simulation_speed == 0:
 		update_pixels()
 #		print(pixel_manager.pixels.size())
+	label.text = "material: " + pixel_manager.pixel_name[spawn_type]
 
 func _draw():
 	var pixels = pixel_manager.pixels
@@ -65,7 +67,6 @@ func _draw():
 		if pixel:
 			var rect2 = Rect2(Vector2(pixel.pos.x*zoom, pixel.pos.y*zoom), Vector2(zoom, zoom))
 			draw_rect(rect2, color_enum[pixel.color], true, 1, false)
-	label.text = "spawn_type: " + str(spawn_type)
 
 func spawn_pixel(type: int = 1, offset: Vector2 = Vector2()):
 	if (pixel_manager):
