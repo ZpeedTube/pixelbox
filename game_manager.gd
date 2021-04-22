@@ -14,21 +14,15 @@ export var simulation_frame: int = 0
 
 export var spawn_type: int = 1
 
-export var color_enum = [
-	Color(0.0, 0.0, 0.0, 0.0),
-	Color(0.5, 0.8, 0.1, 1.0),
-	Color(0.2, 0.2, 0.9, 1.0),
-	Color(0.21, 0.04, 0.04, 1.0),
-	Color(0.38, 0.45, 0.39, 1.0)
-]
-
 var mouse_pressed = false
+
+export var show_invisble = false
 
 
 func _ready():
 	pixel_manager.world_width = world_width
 	pixel_manager.world_height = world_height
-	print(pixel_manager.pixels)
+#	print(pixel_manager.pixels)
 
 func _input(event):
 	if event.is_action("click"):
@@ -59,20 +53,32 @@ func _process(delta):
 		update_pixels()
 #		print(pixel_manager.pixels.size())
 	label.text = "material: " + pixel_manager.pixel_name[spawn_type]
+	
+	var pixel = pixel_manager.get_pixel(get_global_mouse_position())
+	if pixel:
+		label.text += "\npixel: " + str(pixel)
+#		label.text += "\ntype: " + str(pixel_manager.pixels[mouse_pixel_pos].id)
 
 func _draw():
-	var pixels = pixel_manager.pixels
-	for p in pixels.size():
-		var pixel = pixels[p]
-		if pixel:
-			var rect2 = Rect2(Vector2(pixel.pos.x*zoom, pixel.pos.y*zoom), Vector2(zoom, zoom))
-			draw_rect(rect2, color_enum[pixel.color], true, 1, false)
+	if simulation_frame % simulation_speed == 0:
+		var pixels = pixel_manager.pixels
+		for p in pixels.size():
+			var pixel = pixels[p]
+			if pixel:
+				var rect2 = Rect2(Vector2(pixel.pos.x*zoom, pixel.pos.y*zoom), Vector2(zoom, zoom))
+				var color =  pixel_manager.color_palette[pixel.color]
+#				if pixel.type == 1:
+#					color =  Color(rand_range(color.r, 0.6), rand_range(color.g,0.9), 0.1, 1)
+				draw_rect(rect2, color, true, 1, false)
+#			elif show_invisble && pixel != null:
+#				var rect2 = Rect2(Vector2(pixel.pos.x*zoom, pixel.pos.y*zoom), Vector2(zoom, zoom))
+#				draw_rect(rect2, Color(0.9,0.1,0.9,1), true, 1, false)
+				
 
 func spawn_pixel(type: int = 1, offset: Vector2 = Vector2()):
 	if (pixel_manager):
 		pixel_manager.resize(world_height * world_width)
 		var mouse_pos = get_global_mouse_position()
-#			print("add ", mouse_pos.x / zoom)
 		pixel_manager.new_pixel(mouse_pos+offset, type)
 
 
@@ -91,6 +97,10 @@ func update_pixels():
 func calc_pos(x: int, y: int):
 	if x >= world_width:
 		x = world_width -1
+	elif x < 0:
+		x = 0
 	if y >= world_height:
 		y = world_height -1
+	elif y < 0:
+		y = 0
 	return world_width * y + x

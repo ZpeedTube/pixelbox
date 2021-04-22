@@ -38,20 +38,27 @@ static func react(id: int, pixel, pixels, ww, wh):
 			if pixel.pos.x > 0:
 				pixel.pos.x -= 1
 			pixels[left] = pixel
+			pixels[id] = null
 			return
 		elif right < count && above > 0 && pixels[right] == null:
 			pixel.pos.y = y
-			if pixel.pos.x < ww - 1:
+			if pixel.pos.x < ww:
 				pixel.pos.x += 1
 			pixels[right] = pixel
+			pixels[id] = null
 			return
 		elif above < count && above > 0 && pixels[above] == null:
 			pixel.pos.y = y
 			pixels[above] = pixel
+			pixels[id] = null
 			return
 		y -= 1
 
-
+static func swap_pixels(pixel, other_pixel, pixels, this_id, other_id):
+	var other = pixels[other_id]
+	pixels[this_id] = other_pixel
+	pixels[other_id] = pixel
+	return other
 
 static func calc_pos(x: int, y: int, world_width, world_height):	
 	return world_width * y + x
