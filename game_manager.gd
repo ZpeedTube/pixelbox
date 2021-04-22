@@ -18,6 +18,8 @@ var mouse_pressed = false
 
 export var show_invisble = false
 
+export var use_random_direction = false
+
 
 func _ready():
 	pixel_manager.world_width = world_width
@@ -62,18 +64,16 @@ func _process(delta):
 func _draw():
 	if simulation_frame % simulation_speed == 0:
 		var pixels = pixel_manager.pixels
-		for p in pixels.size():
-			var pixel = pixels[p]
-			if pixel:
-				var rect2 = Rect2(Vector2(pixel.pos.x*zoom, pixel.pos.y*zoom), Vector2(zoom, zoom))
-				var color =  pixel_manager.color_palette[pixel.color]
-#				if pixel.type == 1:
-#					color =  Color(rand_range(color.r, 0.6), rand_range(color.g,0.9), 0.1, 1)
-				draw_rect(rect2, color, true, 1, false)
-#			elif show_invisble && pixel != null:
-#				var rect2 = Rect2(Vector2(pixel.pos.x*zoom, pixel.pos.y*zoom), Vector2(zoom, zoom))
-#				draw_rect(rect2, Color(0.9,0.1,0.9,1), true, 1, false)
-				
+#		for p in pixels.size():
+		if pixels.size() == world_width * world_height:
+			for y in range(0, world_height, 1):
+				for x in range(0, world_width-1, 1):
+					var p = world_width * y + x
+					var pixel = pixels[p]
+					if pixel:
+						var rect2 = Rect2(Vector2(x*zoom, y*zoom), Vector2(zoom, zoom))
+						var color =  pixel_manager.color_palette[pixel.color]
+						draw_rect(rect2, color, true, 1, false)
 
 func spawn_pixel(type: int = 1, offset: Vector2 = Vector2()):
 	if (pixel_manager):
@@ -84,14 +84,25 @@ func spawn_pixel(type: int = 1, offset: Vector2 = Vector2()):
 
 func update_pixels():
 	var pixels = pixel_manager.pixels
-	var new_pixels = []
-	new_pixels.resize(pixels.size())
-	for p in range(pixels.size()-1, 0, -1):
-		var pixel = pixels[p]
-		if pixel:
-			var other_pixel = pixel_manager.get_pixel_type(pixel.type).update(p, pixel, pixels, world_width, world_height)
-			if other_pixel:
-				pixel_manager.get_pixel_type(other_pixel.type).react(p, other_pixel, pixels, world_width, world_height)
+	if pixels.size() == world_width * world_height:
+		var x_min = 0
+		var x_max = world_width
+		var direction = 1
+		if use_random_direction:
+			direction = randi() % 2
+			if direction == 0:
+				direction = -1
+				x_min = world_width - 1
+				x_max = 0
+#		print(str(direction))
+		for y in range(world_height - 1, -1, -1):
+			for x in range(x_min, x_max, direction):
+				var p = world_width * y + x
+				var pixel = pixels[p]
+				if pixel:
+					var other_pixel = pixel_manager.get_pixel_type(pixel.type).update(p, x, y, pixel, pixels, world_width, world_height)
+					if other_pixel:
+						pixel_manager.get_pixel_type(other_pixel.type).react(p, x, y, other_pixel, pixels, world_width, world_height)
 	update() # redraw with _draw
 	
 func calc_pos(x: int, y: int):

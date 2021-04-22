@@ -1,26 +1,26 @@
 extends Node
 
-static func update(id: int, pixel, pixels, ww, wh):
+static func update(id: int, x: int, y: int, pixel, pixels, ww, wh):
 	var count = pixels.size()
-	var below = calc_pos(pixel.pos.x, pixel.pos.y + 1, ww, wh)
-	var below_left = calc_pos(pixel.pos.x - 1, pixel.pos.y + 1, ww, wh)
-	var below_right = calc_pos(pixel.pos.x + 1, pixel.pos.y + 1, ww, wh)
-	var left = calc_pos(pixel.pos.x - 1, pixel.pos.y, ww, wh)
-	var right = calc_pos(pixel.pos.x + 1, pixel.pos.y, ww, wh)
+	var below = calc_pos(x, y + 1, ww, wh)
+	var below_left = calc_pos(x - 1, y + 1, ww, wh)
+	var below_right = calc_pos(x + 1, y + 1, ww, wh)
+	var left = calc_pos(x - 1, y, ww, wh)
+	var right = calc_pos(x + 1, y, ww, wh)
 	if below < count && (pixels[below] == null || pixels[below].type == 2):
-		pixel.pos.y += 1
+#		y += 1
 		return swap_pixels(pixel, pixels[below], pixels, id, below)
 	if left < count && (pixels[left] == null || pixels[left].type == 2):
 		if below_left < count && (pixels[below_left] == null || pixels[below_left].type == 2):
-			if pixel.pos.x > 0:
-				pixel.pos.x -= 1
-			pixel.pos.y += 1
+#			if x > 0:
+#				x -= 1
+#			y += 1
 			return swap_pixels(pixel, pixels[below_left], pixels, id, below_left)
 	if right < count && (pixels[right] == null || pixels[right].type == 2):
 		if below_right < count && (pixels[below_right] == null || pixels[below_right].type == 2):
-			if pixel.pos.x < ww - 1:
-				pixel.pos.x += 1
-			pixel.pos.y = pixel.pos.y + 1
+#			if x < ww - 1:
+#				x += 1
+#			y = y + 1
 			return swap_pixels(pixel, pixels[below_right], pixels, id, below_right)
 	return null
 

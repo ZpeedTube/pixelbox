@@ -8,9 +8,11 @@
 [node name="GameManager" type="Sprite" parent="."]
 offset = Vector2( -0.5, -0.5 )
 script = ExtResource( 2 )
+world_width = 200
 world_height = 100
-zoom = 9
+zoom = 6
 simulation_speed = 1
+use_random_direction = true
 
 [node name="PixelManager" type="Node" parent="GameManager"]
 script = ExtResource( 1 )

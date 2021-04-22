@@ -1,54 +1,58 @@
 extends Node
 
-static func update(id: int, pixel, pixels, ww, wh):
+static func update(id: int, x: int, y: int, pixel, pixels, ww, wh):
 	var count = pixels.size()
-	var below = calc_pos(pixel.pos.x, pixel.pos.y + 1, ww, wh)
-	var below_left = calc_pos(pixel.pos.x - 1, pixel.pos.y + 1, ww, wh)
-	var below_right = calc_pos(pixel.pos.x + 1, pixel.pos.y + 1, ww, wh)
-	var left = calc_pos(pixel.pos.x - 1, pixel.pos.y, ww, wh)
-	var right = calc_pos(pixel.pos.x + 1, pixel.pos.y, ww, wh)
+	var below = calc_pos(x, y + 1, ww, wh)
+	var below_left = calc_pos(x - 1, y + 1, ww, wh)
+	var below_right = calc_pos(x + 1, y + 1, ww, wh)
+	var left = calc_pos(x - 1, y, ww, wh)
+	var right = calc_pos(x + 1, y, ww, wh)
+#	if below < count && pixels[below] != null && pixels[below].type != 2:
+#		if right < count && pixels[right] == null:
+#			if below_right < count && pixels[below_right] == null:
+#				pixels[id] = null
+#				pixels[below_right] = pixel
+#				return
+#		if left < count && pixels[left] == null:
+#			if below_left < count && pixels[below_left] == null:
+#				pixels[id] = null
+#				pixels[below_left] = pixel
+#				return
 	if below < count && pixels[below] == null:
 		pixels[id] = null
-		pixel.pos.y += 1
 		pixels[below] = pixel
-	elif left < count && pixels[left] == null:
-		pixels[id] = null
-		if pixel.pos.x > 0:
-			pixel.pos.x -= 1
-		pixels[left] = pixel
-	elif right < count && pixels[right] == null:
-		pixels[id] = null
-		if pixel.pos.x < ww - 1:
-			pixel.pos.x += 1
-		pixels[right] = pixel
+		return null
+	
+	var r = randi() % 5
+	match r:
+		0, 4:
+			if right < count && pixels[right] == null:
+				pixels[id] = null
+				pixels[right] = pixel
+		1, 2:
+			if left < count && pixels[left] == null:
+				pixels[id] = null
+				pixels[left] = pixel
 	return null
 
-static func react(id: int, pixel, pixels, ww, wh):
+static func react(id: int, x: int, y: int, pixel, pixels, ww, wh):
 	var count = pixels.size()
 	var above = -1
 	var left = -1
 	var right = -1
-	var y = pixel.pos.y
 	while y > 0:
-		above = calc_pos(pixel.pos.x, y, ww, wh)
-		left = calc_pos(pixel.pos.x - 1, y, ww, wh)
-		right = calc_pos(pixel.pos.x + 1, y, ww, wh)
+		above = calc_pos(x, y, ww, wh)
+		left = calc_pos(x - 1, y, ww, wh)
+		right = calc_pos(x + 1, y, ww, wh)
 		if left < count && above > 0 && pixels[left] == null:
-			pixel.pos.y = y
-			if pixel.pos.x > 0:
-				pixel.pos.x -= 1
 			pixels[left] = pixel
 			pixels[id] = null
 			return
 		elif right < count && above > 0 && pixels[right] == null:
-			pixel.pos.y = y
-			if pixel.pos.x < ww:
-				pixel.pos.x += 1
 			pixels[right] = pixel
 			pixels[id] = null
 			return
 		elif above < count && above > 0 && pixels[above] == null:
-			pixel.pos.y = y
 			pixels[above] = pixel
 			pixels[id] = null
 			return

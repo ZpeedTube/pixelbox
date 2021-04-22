@@ -53,7 +53,6 @@ func new_pixel(global_pos: Vector2, type: int):
 		return null
 		
 	var pixel = {
-		"pos": {"x": int(pos.x), "y": int(pos.y)},
 		"type": type,
 		"color": type,
 		"velocity": -1,
