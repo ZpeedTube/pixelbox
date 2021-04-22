@@ -13,9 +13,7 @@ export var simulation_speed: int = 10
 export var simulation_frame: int = 0
 
 export var spawn_type: int = 1
-
 var mouse_pressed = false
-
 export var show_invisble = false
 
 export var use_random_direction = false
@@ -24,7 +22,6 @@ export var use_random_direction = false
 func _ready():
 	pixel_manager.world_width = world_width
 	pixel_manager.world_height = world_height
-#	print(pixel_manager.pixels)
 
 func _input(event):
 	if event.is_action("click"):
@@ -53,18 +50,15 @@ func _process(delta):
 #				spawn_pixel(Vector2(xx * zoom,yy * zoom))
 	if simulation_frame % simulation_speed == 0:
 		update_pixels()
-#		print(pixel_manager.pixels.size())
 	label.text = "material: " + pixel_manager.pixel_name[spawn_type]
 	
 	var pixel = pixel_manager.get_pixel(get_global_mouse_position())
 	if pixel:
 		label.text += "\npixel: " + str(pixel)
-#		label.text += "\ntype: " + str(pixel_manager.pixels[mouse_pixel_pos].id)
 
 func _draw():
 	if simulation_frame % simulation_speed == 0:
 		var pixels = pixel_manager.pixels
-#		for p in pixels.size():
 		if pixels.size() == world_width * world_height:
 			for y in range(0, world_height, 1):
 				for x in range(0, world_width-1, 1):
