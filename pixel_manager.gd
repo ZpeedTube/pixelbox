@@ -22,6 +22,7 @@ export var color_palette = [
 	Color(0.2, 0.2, 0.9, 1.0),
 	Color(0.21, 0.04, 0.04, 1.0),
 	Color(0.38, 0.45, 0.39, 1.0)
+]
 
 export var default_type:int = 0
 export var pixels = []
